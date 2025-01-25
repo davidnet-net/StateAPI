@@ -124,32 +124,17 @@ Api.get('/Speedtest', (req, res) => {
     });
 });
 
-Api.get('/Battery', async (req, res) => {
-    try {
-        // Functie om het batterijpercentage op te halen
-        function getBatteryPercentage() {
-            return new Promise((resolve, reject) => {
-            exec("acpi -b", (error, stdout, stderr) => {
-                if (error) {
-                return reject(error);
-                }
-        
-                const match = stdout.match(/(\d+)%/);
-                if (match) {
-                resolve(parseInt(match[1], 10));
-                } else {
-                reject(new Error('Could not parse battery percentage'));
-                }
-            });
-            });
+Api.get('/Temperature', (req, res) => {
+    exec('vcgencmd measure_temp', (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Error executing vcgencmd measure_temp: ${error}`);
+            return res.status(500).json({ error: 'Error executing vcgencmd measure_temp' });
         }
-  
-        const batteryPercentage = await getBatteryPercentage();
-        res.json({ battery: batteryPercentage + '%' });
-    } catch (error) {
-        console.error('Error fetching battery percentage:', error);
-        res.status(500).json({ error: 'Failed to get battery percentage' });
-    }
+
+        res.text({
+            stdout
+        })
+    });
 });
 
 // Register

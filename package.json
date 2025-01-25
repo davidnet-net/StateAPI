@@ -1,6 +1,6 @@
 {
   "name": "stateapi",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Gives the state of an server!",
   "main": "StateAPI.js",
   "type": "module",
