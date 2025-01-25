@@ -12,7 +12,6 @@ if screen -list | grep -q "$SESSION_NAME"; then
 fi
 
 echo "Updating depedencies!"
-sudo apt update && sudo apt install screen && sudo snap install speedtest
 npm install
 echo "Finished updating depedencies!"
 
