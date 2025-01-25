@@ -131,7 +131,7 @@ Api.get('/Temperature', (req, res) => {
             return res.status(500).json({ error: 'Error executing vcgencmd measure_temp' });
         }
 
-        res.text({
+        res.send({
             stdout
         })
     });
