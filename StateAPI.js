@@ -106,20 +106,29 @@ Api.get('/Nodes', (req, res) => {
 });
 
 Api.get('/Speedtest', (req, res) => {
-    exec('speedtest -f json', (error, stdout, stderr) => {
+    exec('speedtest-cli --json', (error, stdout, stderr) => {
         if (error) {
-            console.error(`Error executing speedtest: ${error}`);
-            return res.status(500).json({ error: 'Failed to perform speed test' });
+            console.error(`Error executing speedtest-cli: ${error.message}`);
+            return res.status(500).json({ error: error.message });
+        }
+
+        if (stderr) {
+            console.error(`Stderr: ${stderr}`);
+            return res.status(500).json({ error: stderr });
         }
 
         try {
             const result = JSON.parse(stdout);
             res.json({
-                result
+                download_speed_mbps: (result.download / 1_000_000).toFixed(2),
+                upload_speed_mbps: (result.upload / 1_000_000).toFixed(2),
+                ping_ms: result.ping,
+                server: result.server.name,
+                location: result.server.country
             });
-        } catch (err) {
-            console.error("Error parsing speedtest result:", err);
-            res.status(500).json({ error: 'Failed to parse speed test result' });
+        } catch (parseError) {
+            console.error(`Failed to parse JSON: ${parseError.message}`);
+            res.status(500).json({ error: 'Failed to parse speedtest-cli output' });
         }
     });
 });
