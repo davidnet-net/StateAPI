@@ -18,7 +18,7 @@ import { Api, RegisterNode, State } from './DN-Node.js';
 
 // Main
 Api.get('/', (req, res) => {
-    res.redirect('https://davidnet.net');
+    res.redirect('https://davidnet.net/Errors/Lost');
 });
 
 Api.get('/Cpu', (req, res) => {
